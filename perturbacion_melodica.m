@@ -1,15 +1,13 @@
-parten = @(x) sign(x).*(abs(x)-floor(abs(x)));
-
-# Función de la familia de Arnold y cómputo de la melodía.
+# Function of the Arnold family and computation of the melody.
 
 alpha = e;
 eepsilon = 0.5;
 
 phi = @(x) x+alpha+(eepsilon/(2*pi))*sin(2*pi*x);
 P0 = [0];
-for k = 1:15 P0 = [P0 parten(phi(P0(end)))]; end
+for k = 1:15 P0 = [P0 mod(phi(P0(end)),1)]; end
 
-# Cómputo de la primera aproximación al cambio de coordenadas y primera variación de la melodía.
+# Computation of the first approximation to the change of coordinates and first variation of the melody.
 
 P1 = [0];
 H = @(x) x - (eepsilon/(2*pi))*cos(2*pi*x-alpha*pi)/(2*sin(alpha*pi));
@@ -20,7 +18,7 @@ for k = 1:15
  P1 = [P1 v];
 end
 
-# Cómputo de la segunda aproximación al cambio de coordenadas y segunda variación de la melodía.
+# Computation of the second approximation to the change of coordinates and second variation of the melody.
 
 P2 = [0];
 H = @(x) x - (eepsilon/(2*pi))*cos(2*pi*x-alpha*pi)/(2*sin(alpha*pi))+(eepsilon^2/(4*pi^2))*sin(4*pi*x-alpha*pi)/(4*sin(alpha*pi)*sin(2*alpha*pi));
@@ -31,7 +29,7 @@ for k = 1:15
  P2 = [P2 v];
 end
 
-# Función de cambio de coordenadas en términos de los coeficientes de Fourier de la perturbación eta.
+# Coordinate change function in terms of the Fourier coefficients of the eta perturbation.
 
 function resp = hache(coeffp,coeffn,alpha,x)
  m = rows(coeffp);
@@ -63,7 +61,7 @@ function P = kam_generator(alpha,epsilon,n,M)
  # with parameters alpha and epsilon, and M-1 changes of coordinates
  # and its corresponding variations of the original melody.
 
- # Function of the Arnold's family.
+ # Here phi is a function of the Arnold's family.
 
  phi = @(x) x+alpha+(epsilon/(2*pi))*sin(2*pi*x);
 
@@ -89,7 +87,7 @@ function P = kam_generator(alpha,epsilon,n,M)
   ccoeffn = zeros(1,NF);
   res = [];
   
-  #  rho = evdif(coeffp,coeffn,phi,alpha,evdif(coeffp,coeffn,phi,alpha,evdif(coeffp,coeffn,phi,alpha,0)))/3
+  rho = evdif(coeffp,coeffn,phi,alpha,evdif(coeffp,coeffn,phi,alpha,evdif(coeffp,coeffn,phi,alpha,0)))/3
  
   # Computation of eta in the sampled points.
  
